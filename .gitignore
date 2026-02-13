@@ -1,0 +1,6 @@
+node_modules/
+.env
+storage/entitlements.json
+storage/otp-codes.json
+*.log
+.DS_Store
