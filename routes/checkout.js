@@ -29,14 +29,15 @@ router.post('/', strictLimiter, async (req, res) => {
             });
         }
 
-        // Déterminer l'URL de succès/annulation
+        // Determine success/cancel URLs
+        const baseUrl = process.env.BACKEND_URL || `${req.protocol}://${req.get('host')}`;
         const successUrl = process.env.FRONTEND_URL
             ? `${process.env.FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`
-            : 'https://example.com/success?session_id={CHECKOUT_SESSION_ID}';
+            : `${baseUrl}/payment/success?session_id={CHECKOUT_SESSION_ID}`;
 
         const cancelUrl = process.env.FRONTEND_URL
             ? `${process.env.FRONTEND_URL}/cancel`
-            : 'https://example.com/cancel';
+            : `${baseUrl}/payment/cancel`;
 
         // Créer une session Checkout
         const session = await stripe.checkout.sessions.create({
