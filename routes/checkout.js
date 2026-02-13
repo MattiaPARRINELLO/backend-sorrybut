@@ -2,12 +2,14 @@ const express = require('express');
 const router = express.Router();
 const Stripe = require('stripe');
 const { strictLimiter } = require('../middleware/rateLimiter');
+const { isEmailVerified } = require('../utils/storage');
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 /**
  * POST /checkout
- * Crée une session Stripe Checkout pour le paiement unique
+ * Create a Stripe Checkout session for one-time payment
+ * Requires email to be verified first via /auth/verify-email
  */
 router.post('/', strictLimiter, async (req, res) => {
     try {
@@ -15,6 +17,16 @@ router.post('/', strictLimiter, async (req, res) => {
 
         if (!email || !email.includes('@')) {
             return res.status(400).json({ error: 'Invalid email' });
+        }
+
+        // Check if email has been verified
+        const verified = await isEmailVerified(email);
+
+        if (!verified) {
+            return res.status(403).json({
+                error: 'Email not verified',
+                message: 'Please verify your email with OTP code before purchasing'
+            });
         }
 
         // Déterminer l'URL de succès/annulation

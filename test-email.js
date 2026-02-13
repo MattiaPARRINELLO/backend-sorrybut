@@ -51,7 +51,7 @@ async function testEmail() {
             configOk = false;
         } else {
             // Masquer les mots de passe
-            const value = varName.includes('PASSWORD') 
+            const value = varName.includes('PASSWORD')
                 ? '*'.repeat(process.env[varName].length)
                 : process.env[varName];
             log('green', `   ✓ ${varName}: ${value}`);
@@ -86,7 +86,7 @@ async function testEmail() {
         log('cyan', '📨 Test 1: Envoi d\'un code OTP...');
         const testCode = Math.floor(100000 + Math.random() * 900000).toString();
         log('yellow', `   Code de test généré: ${testCode}`);
-        
+
         try {
             const result = await sendOTPEmail(email, testCode);
             if (result) {
@@ -105,7 +105,7 @@ async function testEmail() {
     // Test email confirmation d'achat
     if (type === 'purchase' || type === 'both') {
         log('cyan', '📨 Test 2: Envoi d\'un email de confirmation d\'achat...');
-        
+
         try {
             const result = await sendPurchaseConfirmationEmail(email);
             if (result) {

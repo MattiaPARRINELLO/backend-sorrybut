@@ -47,18 +47,18 @@ router.post('/stripe', express.raw({ type: 'application/json' }), async (req, re
                 if (!email) {
                     console.error('❌ Email manquant dans la session:', session.id);
                     // On retourne 200 pour éviter que Stripe réessaie
-                    return res.json({ 
-                        received: true, 
-                        warning: 'Missing email' 
+                    return res.json({
+                        received: true,
+                        warning: 'Missing email'
                     });
                 }
 
                 // Validation de l'email
                 if (!email.includes('@')) {
                     console.error('❌ Email invalide dans la session:', email);
-                    return res.json({ 
-                        received: true, 
-                        warning: 'Invalid email' 
+                    return res.json({
+                        received: true,
+                        warning: 'Invalid email'
                     });
                 }
 
@@ -75,9 +75,9 @@ router.post('/stripe', express.raw({ type: 'application/json' }), async (req, re
                 } catch (error) {
                     console.error('❌ Erreur activation premium:', error);
                     // On retourne quand même 200 pour éviter les retry infinis
-                    return res.json({ 
-                        received: true, 
-                        error: 'Premium activation failed' 
+                    return res.json({
+                        received: true,
+                        error: 'Premium activation failed'
                     });
                 }
                 break;
@@ -118,9 +118,9 @@ router.post('/stripe', express.raw({ type: 'application/json' }), async (req, re
     } catch (error) {
         console.error('❌ Erreur critique traitement webhook:', error);
         // Retourner 500 pour que Stripe réessaie
-        res.status(500).json({ 
+        res.status(500).json({
             error: 'Webhook processing error',
-            eventType: event.type 
+            eventType: event.type
         });
     }
 });
